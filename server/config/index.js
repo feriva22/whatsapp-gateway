@@ -11,7 +11,7 @@ const server = new App();
 
 moment.tz.setDefault("Asia/Jakarta").locale("id");
 
-const { SESSION_NAME, AUTO_START } = process.env;
+const { SESSION_NAME, AUTO_START, HOST } = process.env;
 
 const serverHttp = server.app.listen(server.PORT, async () => {
 	await connectDatabase();
@@ -23,7 +23,12 @@ const serverHttp = server.app.listen(server.PORT, async () => {
 	console.log(modules.color("[APP]", "#EB6112"), modules.color(moment().format("DD/MM/YY HH:mm:ss"), "#F8C471"), modules.color(`App Listening at http://localhost:${server.PORT}`, "#82E0AA"));
 });
 
-const io = new Server(serverHttp);
+const io = new Server(serverHttp, {
+	cors: {
+		origin: HOST,
+		methods: ["GET", "POST"]
+	}
+});
 const socket = io.on("connection", (socket) => {
 	socket.on("disconnect", () => {
 		console.log("Socket Disconnect");
