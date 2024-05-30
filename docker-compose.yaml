@@ -1,0 +1,21 @@
+version: "3.1"
+services:
+  app:
+    build:
+      context: ./
+    ports:
+      - 8080:8080
+    environment:
+      - DB_USER=root
+      - DB_HOST=db-stage
+      - HOST=https://automatic-orbit-vgjv4qxpg953w4xr-8080.app.github.dev
+    depends_on:
+      - db-stage
+    links:
+      - db-stage
+  db-stage:
+    image: mariadb:latest
+    ports:
+      - 3306:3306
+    environment:
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1
